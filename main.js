@@ -6,11 +6,10 @@ let Arreglodeproductos = [];
 
 let carrito= [];
 
-let arreglodentrodecarritousuario=[];
 
 let idproductos = 1;
 
-let idcarrito= 1;
+let idcarrito = 1;
 
 let date = new Date();
     let dateStr =
@@ -44,12 +43,13 @@ const { Router } = express;
 // Definir rutas
 
 const rutaProductos = Router();
-
+const rutaCarrito = Router();
 //Endpoints
 
 //productos
 
 aplicacion.use("/", rutaProductos);
+aplicacion.use("/", rutaCarrito);
 
 
 rutaProductos.get("/productos", (peticion, respuesta) => {
@@ -154,17 +154,96 @@ rutaProductos.delete("/productos/:id", (peticion, respuesta) => {
 
 //carrito
 
-rutaProductos.post("/carrito", (peticion, respuesta) => {
+rutaCarrito.post("/carrito/", (peticion, respuesta) => {
   
   const productocarrito = peticion.body;
-  const ipAddress = peticion.socket.remoteAddress;
-  Savecarrito(productocarrito, ipAddress).then(()=>{
+  Savecarrito(productocarrito).then(()=>{
     respuesta.send(productocarrito)
   })
   
 }); 
 
+rutaCarrito.delete("/carrito/:id", (peticion, respuesta) => {
 
+  const id = parseInt(peticion.params.id);
+  leerarchivocarrito().then(() => {
+    deleteByIDcarrito(id).then(() => {
+      if (objetobuscado) {
+        respuesta.json("producto eliminado");
+      } else {
+        respuesta.status(404);
+        respuesta.json({ error: "producto no encontrado" });
+      }
+    });
+  });
+  
+  
+}); 
+
+rutaCarrito.get("/carrito/:id/productos", (peticion, respuesta) => {
+  const id = parseInt(peticion.params.id);
+
+  leerarchivocarrito().then(() => {
+    getByIDcarrito(id).then(() => {
+      if (objetobuscado) {
+        respuesta.json(objetobuscado.productos);
+      } else {
+        respuesta.status(404);
+        respuesta.json({ error: "producto no encontrado" });
+      }
+    });
+  });
+});
+
+rutaCarrito.post("/carrito/:id/productos", (peticion, respuesta) => {
+  const id = parseInt(peticion.params.id);
+  const productoaagregar= peticion.body
+
+  leerarchivocarrito().then(() => {
+    getByIDcarrito(id).then(() => {
+      if (objetobuscado) {
+        objetobuscado.productos.push(productoaagregar)
+        console.log(objetobuscado)
+        fs.promises.writeFile(
+          "./public/carrito.json",
+          JSON.stringify(carrito, 1, "\n")
+        );
+        respuesta.json(carrito);
+      } else {
+        respuesta.status(404);
+        respuesta.json({ error: "producto no encontrado" });
+      }
+    });
+  });
+});
+
+rutaCarrito.delete("/carrito/:id/productos/:id_prod", (peticion, respuesta) => {
+
+  const id = parseInt(peticion.params.id);
+  const id_prod = parseInt(peticion.params.id_prod);
+
+  leerarchivocarrito().then(() => {
+    getByIDcarrito(id).then(() => {
+      if (objetobuscado) {
+        objetobuscado.productos.splice(
+          objetobuscado.productos.findIndex((a)=>a.id=== id_prod),
+          1
+        )
+        console.log(objetobuscado)
+        fs.promises.writeFile(
+          "./public/carrito.json",
+          JSON.stringify(carrito, 1, "\n")
+        );
+        respuesta.json(carrito);
+      } else {
+        respuesta.status(404);
+        respuesta.json({ error: "producto no encontrado" });
+      }
+    });
+  });
+  
+  
+}); 
 
 ////////// Carpeta public visible
 
@@ -305,75 +384,31 @@ async function leerarchivocarrito() {
   }
 }
 
-
-async function Savecarrito(Objeto, ipAddress) { 
+async function Savecarrito(Objeto) { 
   try { 
 
     await leerarchivocarrito();
 
     if (carrito.length>0) {
-      const found = carrito.find(({ ip }) => ip === ipAddress);
-        if (found.ip==ipAddress) {
-          console.log('estoy aca1')
-          getByIDcarrito(idcarrito).then(()=>{
-            arreglodentrodecarritousuario=objetobuscado.productos;
-            arreglodentrodecarritousuario.push(Objeto);
-            deleteByIDcarrito(idcarrito).then(()=>{
-              Carritodelusuario = {
-                ip: ipAddress,
-                id: idcarrito,
-                timestamp: dateStr,
-                productos: arreglodentrodecarritousuario 
-              };
-    
-              carrito.push(Carritodelusuario);
-    
-              fs.promises.writeFile(
-                "./public/carrito.json",
-                JSON.stringify(carrito, 1, "\n")
-              );
-    
-    
-            })
-            
-    
-          })
-          
-        } else {
-          console.log('estoy aca2')
-          idcarrito = carrito.length + 1;
+      idcarrito=carrito.length+1
 
-          arreglodentrodecarritousuario=[]
-
-          arreglodentrodecarritousuario.push(Objeto);
-
-          Carritodelusuario = {
-            ip: ipAddress,
-            id: idcarrito,
-            timestamp: dateStr,
-            productos: arreglodentrodecarritousuario 
-          };
-      
-          carrito.push(Carritodelusuario);
-      
-          await fs.promises.writeFile(
-            "./public/carrito.json",
-            JSON.stringify(carrito, 1, "\n")
-          );
-          
-        }
-
+      Carritodelusuario = {
+        id: idcarrito,
+        ...Objeto,
+      };
+  
+      carrito.push(Carritodelusuario);
+  
+      await fs.promises.writeFile(
+        "./public/carrito.json",
+        JSON.stringify(carrito, 1, "\n")
+      );
       
     } else {
-      console.log('estoy aca3')
     
-    arreglodentrodecarritousuario.push(Objeto);
-
     Carritodelusuario = {
-      ip: ipAddress,
       id: idcarrito,
-      timestamp: dateStr,
-      productos: arreglodentrodecarritousuario 
+      ...Objeto,
     };
 
     carrito.push(Carritodelusuario);
