@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servidor de Productos</title>
+</head>
+<body>
+    <a href="/productos">Ir a la lista -></a>
+    <h1> Ingrese los datos para agregar un producto</h1>
+    <form action="/productos" method="post">
+        <label for="title">Nombre:</label><br>
+        <input type="text" id="title" name="title" value=""><br>
+        <label for="title">Descripción:</label><br>
+        <input type="text" id="description" name="description" value=""><br>
+        <label for="price">precio:</label><br>
+        <input type="number" id="price" name="price" value=""><br>
+        <label for="price">Código:</label><br>
+        <input type="number" id="code" name="code" value=""><br>
+        <label for="price">Stock:</label><br>
+        <input type="number" id="stock" name="stock" value=""><br>
+        <label for="thumbnail">Url de imagen:</label><br>
+        <input type="text" id="thumbnail" name="thumbnail" value=""><br><br>
+        <input type="submit" value="Enviar">
+    </form> 
+    
+</body>
+</html>

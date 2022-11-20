@@ -1,0 +1,86 @@
+[
+
+{
+
+
+"title": "lapicera",
+
+
+"description": "lapicera parker",
+
+
+"price": "100",
+
+
+"code": "01",
+
+
+"stock": "10",
+
+
+"thumbnail": "https://http2.mlstatic.com/D_NQ_NP_764926-MLA40091770739_122019-O.jpg",
+
+
+"id": 1,
+
+
+"timestamp": "20/11/2022 01:12:54"
+
+},
+
+{
+
+
+"title": "lapiz",
+
+
+"description": "lapiz b2",
+
+
+"price": "100",
+
+
+"code": "02",
+
+
+"stock": "10",
+
+
+"thumbnail": "https://http2.mlstatic.com/D_NQ_NP_993268-MLA46569898799_062021-W.jpg",
+
+
+"id": 2,
+
+
+"timestamp": "20/11/2022 01:12:54"
+
+},
+
+{
+
+
+"title": "carpeta",
+
+
+"description": "carpeta estudio",
+
+
+"price": "100",
+
+
+"code": "02",
+
+
+"stock": "10",
+
+
+"thumbnail": "http://d3ugyf2ht6aenh.cloudfront.net/stores/001/144/668/products/88221-de48988d9c3b38378e16046059719006-640-0.png",
+
+
+"id": 3,
+
+
+"timestamp": "20/11/2022 01:12:54"
+
+}
+]
