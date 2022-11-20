@@ -93,7 +93,7 @@ button2.addEventListener('click', async _ => {
   ("00" + date.getMinutes()).slice(-2) + ":" +
   ("00" + date.getSeconds()).slice(-2);
 
- fetch('/carrito/'.concat(), {
+ fetch('/carrito/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
